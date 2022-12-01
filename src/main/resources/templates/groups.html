@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymrleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TDD TODAY - learn test everyday:groups</title>
+    <link rel="stylesheet" href="https://igoradamenko.github.io/awsm.css/css/awsm.min.css">
+    <style>
+        .Bd {
+            border: solid 1px black;
+        }
+
+        .C\(red\) {
+            color: red;
+        }
+
+        .Bdc\(red\) {
+            border-color: red !important;
+        }
+
+        .P\(0\) {
+            padding: 0px;
+        }
+
+        .P\(10px\) {
+            padding: 10px;
+        }
+    </style>
+
+</head>
+
+<body>
+<main>
+    <!--/*@thymesVar id="group" type="java.lang.String"*/-->
+    <h1 th:if="${message != null}" th:text="${message}"></h1>
+<!>
+    <dl> th:each="group : ${groups}" class=Bd P(10px)">
+        <dt th:text="${group.description}">...</dt>
+        <dd>
+            <ul class="P(0)">
+                <li th:each="step: ${group.tasks}" th:text="|${step.description}(${step.daysToDeadline} dni)|">
+                </li>
+            </ul>
+
+        </dd>
+    </dl>
+
+    <fieldset>
+        <legend>Nowy group</legend>
+        <form action="#" method="post" th:action="@{/groups}" th:object="${group}">
+            <p class="C(red)" th:if="${#fields.hasAnyErrors()}" th:errors="*{all}"></p>
+
+            <label>Opis
+                <input type="text" th:field="*{description}" th:errorclass="'Bdc(red)'" />
+            </label>
+            <fieldset th:each="step,stepStat : *{steps}">
+                <legend th:text="|Krok ${stepStat.index +1}|"></legend>
+                <label>Opis
+                    <input type="text" th:field="*{steps[__${stepStat.index}__].description}"
+                           th:errorclass="'Bdc(red)'" />
+                </label>
+                <label>Ilość dni do końca projektu
+                    <input type="number" th:field="*{steps[__${stepStat.index}__].daysToDeadline}"
+                           th:errorclass="'Bdc(red)'" />
+                </label>
+            </fieldset>
+            <div>
+                <button type="submit" name="addStep">+</button>
+            </div>
+            <p>
+                <button type="submit">Dodaj</button>
+                <button type="reset">Usuń</button>
+            </p>
+
+
+        </form>
+
+    </fieldset>
+
+</main>
+</body>
+
+</html>
